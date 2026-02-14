@@ -148,3 +148,8 @@ order by dept;
 -- To get second highest salary using Sub Query
 select max(salary) as second_highest_salary from employees 
 where salary < (select max(salary) from employees);
+
+-- To get third lowest salary using Sub Query
+select min(salary) as third_lowest_salary from employees 
+where salary > (select min(salary) from employees
+where salary > (select min(salary) from employees));
