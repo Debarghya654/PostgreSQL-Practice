@@ -153,3 +153,103 @@ where salary < (select max(salary) from employees);
 select min(salary) as third_lowest_salary from employees 
 where salary > (select min(salary) from employees
 where salary > (select min(salary) from employees));
+
+-- To delete the whole data but not the table
+delete from employees;
+
+-- To delete the table
+drop table if exists employees;
+
+
+-- Joins -> Inner, Left, Right, Outer, Cross, Self
+create table employee (
+empid serial primary key,
+empname varchar(30) not null,
+empage int not null,
+email varchar(30) unique,
+salary decimal(10,2),
+deptid varchar(10) unique not null
+);
+
+create table department (
+deptid varchar(10) primary key,
+deptname varchar(30) not null,
+cabinid varchar(20) unique not null
+);
+
+create table cabin (
+cabinid varchar(20) primary key,
+cfloor int not null
+);
+
+-- To view all the tables
+select * from employee;
+select * from department;
+select * from cabin;
+
+-- To insert data into all the tables
+insert into employee(empid, empname, empage, email, salary, deptid)
+values (1, 'Debarghya', 21, 'debarghya@gmail.com', 26000, 'A01'), 
+(2, 'Aniket', 23, 'aniket@gmail.com', 22000, 'A02'),
+(3, 'Prantik', 22, 'prantik@yahoo.com', 21000, 'A03'),
+(4, 'Sumit', 25, 'sumit@outlook.com', 24000, 'B01'),
+(5, 'Rahul', 24, 'rahul@gmail.com', 23000, 'B02'),
+(6, 'Kingkar', 26, 'kingkar@outlook.com', 25000, 'B03');
+
+insert into department(deptid, deptname, cabinid)
+values ('A01', 'Testing', '52HBC'), 
+('A02', 'Design', '51TBL'),
+('A03', 'RAS', '47DQY'),
+('B01', 'Development', '58JFE'),
+('B02', 'Documentation', '45PXI'),
+('B03', 'Maintanence', '62VPN');
+
+insert into cabin(cabinid, cfloor)
+values ('52HBC', 3), 
+('51TBL', 3),
+('47DQY', 2),
+('58JFE', 3),
+('45PXI', 2),
+('62VPN', 4);
+
+-- To add foreign key into the created table
+alter table employee add foreign key(deptid) references department(deptid);
+
+alter table department add foreign key(cabinid) references cabin(cabinid);
+
+-- Inner Join
+select e.empid, e.empname, e.salary, e.deptid, d.deptname 
+from employee e inner join department d
+on e.deptid = d.deptid;
+
+-- Left Join
+select e.empid, e.empname, e.salary, e.deptid, d.deptname 
+from employee e left join department d
+on e.deptid = d.deptid;
+
+-- Right Join
+select e.empid, e.empname, e.salary, e.deptid, d.deptname 
+from employee e right join department d
+on e.deptid = d.deptid;
+
+-- Full Outer Join
+select e.empid, e.empname, e.salary, e.deptid, d.deptname 
+from employee e full outer join department d
+on e.deptid = d.deptid;
+
+-- Cross Join
+select e.empid, e.empname, e.salary, e.deptid, d.deptname 
+from employee e cross join department d;
+
+-- Self Join
+select e1.empname, e2.deptid
+from employee e1 join employee e2
+on e1.deptid = e2.deptid;
+
+-- Join with 3 tables - employee, department, cabin
+select e.empid, e.empname, d.deptid, d.deptname, c.cabinid, c.cfloor
+from employee e
+join department d
+on e.deptid = d.deptid
+join cabin c
+on d.cabinid = c.cabinid;
